@@ -93,8 +93,10 @@ const Blog = (props) => {
   };
   return (
     <div>
-      <div className="heading text-center" >
-        <h1 className="main-heading text-center lg-4 md-4">Welcome To Blog {loggedInUser}</h1>
+      <div className="heading text-center">
+        <h1 className="main-heading text-center lg-4 md-4">
+          Welcome To Blog {loggedInUser}
+        </h1>
         <button className="btn-Logout" onClick={handleLogout}>
           Logout
         </button>
@@ -103,7 +105,10 @@ const Blog = (props) => {
       <div className="container">
         <div className="text-center lg-2 md-2">
           {!createBlog ? (
-            <button className="createBlog btn btn-primary md-2 lg-2" onClick={() => setcreateBlog(true)}>
+            <button
+              className="createBlog btn btn-primary md-2 lg-2"
+              onClick={() => setcreateBlog(true)}
+            >
               Create New Blog
             </button>
           ) : (
@@ -155,20 +160,28 @@ const Blog = (props) => {
       <div className="card border-0">
         {props.blog.map((e) => (
           <>
-            <div class="container">
-              <div class="list-group">
-                <p class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{e.title}</h5>
+            <div className="container">
+              <div className="list-group">
+                <p className="list-group-item ">
+                  <div className="d-flex w-100 justify-content-between">
+                    <h5 className="mb-1">{e.title}</h5>
                   </div>
-                  <p class="mb-1">{e.body}</p>
+                  <p className="mb-1">{e.body}</p>
                 </p>
-                <Comment
-                  title=""
-                  postid={e.id}
-                  addcomment={addComment}
-                  content={props.comment.filter((e1) => e1.postId === e.id)}
-                />
+                <div className="container">
+                  <div className="list-group">
+                    <p className="list-group-item ">
+                      <Comment
+                        title=""
+                        postid={e.id}
+                        addcomment={addComment}
+                        content={props.comment.filter(
+                          (e1) => e1.postId === e.id
+                        )}
+                      />
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </>
