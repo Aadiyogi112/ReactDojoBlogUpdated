@@ -48,7 +48,7 @@ const Blog = (props) => {
       // second
       window.localStorage.clear();
     };
-  });
+  }, []);
 
   let handlePost = (event) => {
     event.preventDefault();
