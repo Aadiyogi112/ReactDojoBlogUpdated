@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Comment.css";
+import { useDispatch } from "react-redux";
+
+import { addCommentApi } from "../../Redux/blog/blogActionCreators";
+
 const Comment = ({ title, content, postid, addcomment }) => {
   const [isActive, setIsActive] = useState(false);
   const [newcomment, setnewcomment] = useState("");
-  console.log("shshsh", content);
+  console.log("post id in the commnet", postid);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(addCommentApi(postid));
+  }, []);
+
   return (
     <div className="accordion-item">
       <div className="accordion-title" onClick={() => setIsActive(!isActive)}>
@@ -25,15 +34,6 @@ const Comment = ({ title, content, postid, addcomment }) => {
       {isActive && (
         <div className="accordion-content">
           {content.map((comment) => (
-            // <div className="cardflex" key={comment.id}>
-            //   <div className="flexcontainer">
-            //     <div className="email">
-            //       <b>{comment.email}</b>
-            //     </div>
-
-            //     <div>{comment.body}</div>
-            //   </div>
-            // </div>
             <>
               <div class="col-md-8">
                 <div class="d-flex flex-column comment-section">
@@ -58,24 +58,6 @@ const Comment = ({ title, content, postid, addcomment }) => {
               </div>
             </>
           ))}
-          {/* <div className="addcomment">
-            <input
-              type="text"
-              className="newcommentinput"
-              placeholder="Enter your comment"
-              value={newcomment}
-              onChange={(e) => setnewcomment(e.target.value)}
-            />
-            <button
-              className="postcomment"
-              onClick={() => {
-                addcomment(newcomment, postid);
-                setnewcomment("");
-              }}
-            >
-              Comment
-            </button>
-          </div> */}
 
           <div class="bg-light p-2">
             <div class="d-flex flex-row align-items-start">

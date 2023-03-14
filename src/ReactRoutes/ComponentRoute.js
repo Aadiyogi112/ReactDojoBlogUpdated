@@ -6,7 +6,7 @@ import Signup from '../Components/Signup/Signup';
 import { useSelector } from 'react-redux';
 const ComponentRoute = () => {
 
-  var loggedInUser=useSelector((state)=>(state.loginReducer.LoggedinUser.username));
+  var loggedInUser=useSelector((state)=>(state.userName));
     
   if(!loggedInUser){
     loggedInUser=window.localStorage.getItem('Login');

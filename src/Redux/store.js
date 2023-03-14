@@ -10,4 +10,6 @@ const rootReducer = combineReducers({
     blogReducer:blogReducer
     });
 const store= createStore(rootReducer,applyMiddleware(thunk))
+const unsub=store.subscribe(rootReducer)
+unsub();
 export default store;

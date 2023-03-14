@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  addBlog,
+  addBlogSucessfull,
   addComment,
   addUserBlog,
   addUserComment,
-  addBlogApi,
+  addNewBlog,
   addCommentApi,
 } from "../../Redux/blog/blogActionCreators";
-// import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.css";
 import "./Blog.css";
 import Comment from "./Comment";
+
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     addUserBlog: (data) => dispatch(addUserBlog(data)),
+//     addUserComment: (data) => dispatch(addUserComment(data)),
+//     addBlogApi: () => dispatch(addBlogApi()),
+//     addCommentApi: () => dispatch(addCommentApi()),
+//   };
+// };
+
+
 const Blog = (props) => {
   const [title, settitle] = useState("");
   const [body, setbody] = useState("");
@@ -21,31 +32,30 @@ const Blog = (props) => {
   const [createBlog, setcreateBlog] = useState(false);
 
   const navigate = useNavigate();
-  var loggedInUser = useSelector((state) => {
-    return state.loginReducer.LoggedinUser.username;
-  });
-  useDispatch();
+  var loggedInUser = useSelector((state) => state.loginReducer.userName);
+  var blog = useSelector((state) => state.blogReducer.blog);
+  var comment = useSelector((state) => state.blogReducer.comment);
+
+  const dispatch = useDispatch();
+  console.log(
+    "inside blog component logged in user",
+    loggedInUser,
+    blog,
+    comment
+  );
   if (!loggedInUser) {
     loggedInUser = JSON.parse(window.localStorage.getItem("Login")).username;
   }
 
   useEffect(() => {
-    props.addBlogApi();
-    console.log("props in  blog", props.blog);
-    const userpost = JSON.parse(window.localStorage.getItem("userpost"));
-    if (userpost) {
-      props.addblog([...userpost]);
-      setuserPost(userpost);
-    }
-    props.addCommentApi();
-    const usercomment = JSON.parse(window.localStorage.getItem("usercomment"));
-    if (usercomment) {
-      props.addcomment([...usercomment]);
-      setuserComment(usercomment);
-    }
+    dispatch(addNewBlog());
+    console.log("props in  blog", blog);
+
+    // TODO calling the comment API here
+
+    dispatch(addCommentApi(1));
 
     return () => {
-      // second
       window.localStorage.clear();
     };
   }, []);
@@ -54,12 +64,12 @@ const Blog = (props) => {
     event.preventDefault();
     let blogdata = {
       userId: loggedInUser,
-      id: props.blog.length + userPost.length + 1,
+      id: blog.length + userPost.length + 1,
       title: title,
       body: body,
     };
     // User custom blog post
-    props.addUserBlog(blogdata);
+     dispatch(addUserBlog(blogdata)) ;
     setuserPost((prev) => {
       window.localStorage.setItem(
         "userpost",
@@ -77,12 +87,12 @@ const Blog = (props) => {
   let addComment = (newcomment, postid) => {
     let comment1 = {
       postId: postid,
-      id: props.comment.length + userComment.length + 1,
+      id: comment.length + userComment.length + 1,
       name: "",
       email: loggedInUser ? loggedInUser : "DefaultUser",
       body: newcomment,
     };
-    props.addusercomment(comment1);
+    dispatch(addUserComment(comment1));
     setuserComment((prev) => {
       window.localStorage.setItem(
         "usercomment",
@@ -158,7 +168,7 @@ const Blog = (props) => {
         </div>
       </div>
       <div className="card border-0">
-        {props.blog.map((e) => (
+        {blog.map((e) => (
           <>
             <div className="container">
               <div className="list-group">
@@ -174,10 +184,8 @@ const Blog = (props) => {
                       <Comment
                         title=""
                         postid={e.id}
-                        addcomment={addComment}
-                        content={props.comment.filter(
-                          (e1) => e1.postId === e.id
-                        )}
+                        addComment={addComment}
+                        content={comment.filter((e1) => e1.postId === e.id)}
                       />
                     </p>
                   </div>
@@ -191,20 +199,5 @@ const Blog = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    blog: state.blogReducer.blog,
-    comment: state.blogReducer.comment,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addblog: (data) => dispatch(addBlog(data)),
-    addUserBlog: (data) => dispatch(addUserBlog(data)),
-    addcomment: (data) => dispatch(addComment(data)),
-    addusercomment: (data) => dispatch(addUserComment(data)),
-    addBlogApi: () => dispatch(addBlogApi()),
-    addCommentApi: () => dispatch(addCommentApi()),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Blog);
+
+export default Blog;
